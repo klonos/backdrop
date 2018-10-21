@@ -79,14 +79,14 @@ class views_plugin_pager_full extends views_plugin_pager {
     );
 
     $form['total_pages'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Number of pages'),
       '#description' => t('The total number of pages. Leave empty to show all pages.'),
       '#default_value' => $this->options['total_pages'],
     );
 
     $form['quantity'] = array(
-      '#type' => 'textfield',
+      '#type' => 'number',
       '#title' => t('Number of pager links visible'),
       '#description' => t('Specify the number of links to pages to display in the pager.'),
       '#default_value' => $this->options['quantity'],
