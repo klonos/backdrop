@@ -34,7 +34,6 @@ input#edit-filters-filter-html-settings-allowed-html {
   padding-bottom: 0;
   font-size: 0.9em;
 }
-
 .editor-dialog {
   width: 100%;
   max-width: 500px;
@@ -85,6 +84,22 @@ input#edit-filters-filter-html-settings-allowed-html {
   margin-right: 0;
   margin-left: 20px;
 }
+
+
+#filterorder .filter-td {
+  float: left;
+  max-width: 95%;
+}
+#filterorder .filter-configure .description, .filter-details.description {
+  white-space: normal;
+}
+#filterorder td:first-child {
+  max-width:300px;
+}
+tr.disabled-row, tr.disabled-row div.description {
+  color: #ccc;
+}
+
 .editor-image-toggle {
   display: inline-block;
   padding: 0 1em;
