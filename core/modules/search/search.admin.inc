@@ -55,7 +55,6 @@ function _search_get_module_names() {
 function search_admin_settings($form, &$form_state) {
   $config = config('search.settings');
 
-
   $form['active'] = array(
     '#type' => 'fieldset',
     '#title' => t('Search items')
@@ -79,16 +78,6 @@ function search_admin_settings($form, &$form_state) {
     '#options' => $module_options,
     '#description' => t('Only one type of item will be searched by default. This selection will determine what appears at http://www.example.com/search.')
   );
-  $form['logging'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Logging')
-  );
-  $form['logging']['search_logging'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Log all searches'),
-    '#default_value' => $config->get('search_logging'),
-    '#description' => t('This setting may affect performance. Enable only if actively inspecting logs of search queries.'),
-  );
   $form['#validate'][] = 'search_admin_settings_validate';
   $form['#submit'][] = 'search_admin_settings_submit';
 
@@ -99,6 +88,36 @@ function search_admin_settings($form, &$form_state) {
       $form = array_merge($form, $added_form);
     }
   }
+
+  // Per module search ranking settings.
+  foreach ($config->get('search_active_modules') as $module) {
+    $factors = module_invoke($module, 'search_admin');
+    if (is_array($factors)) {
+      $factors += $factors;
+
+      // Common fieldset for all influence factors implemented by various
+      // modules via hook_search_admin().
+      $form['content_ranking'] = array(
+        '#type' => 'fieldset',
+        '#title' => t('Content ranking'),
+        '#description' => t('Influence is a numeric multiplier used in ordering search results. A higher number means the corresponding factor has more influence on search results; zero means the factor is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.'),
+        '#theme' => 'node_search_admin',
+      );
+      $form['content_ranking']['factors'] = $factors;
+    }
+  }
+  
+  $form['logging'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Logging')
+  );
+  $form['logging']['search_logging'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Log all searches'),
+    '#default_value' => $config->get('search_logging'),
+    '#description' => t('This setting may affect performance. Enable only if actively inspecting logs of search queries.'),
+  );
+
   $form['actions']['#type'] = 'actions';
   $form['actions']['submit'] = array(
     '#type' => 'submit',
