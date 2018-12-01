@@ -41,13 +41,17 @@ abstract class DiffOp {
 
   abstract public function reverse();
 
-  public function norig()
-  {
+  /**
+   * @return int
+   */
+  public function norig() {
     return $this->orig ? sizeof($this->orig) : 0;
   }
 
-  public function nfinal()
-  {
+  /**
+   * @return int
+   */
+  public function nfinal() {
     return $this->final ? sizeof($this->final) : 0;
   }
 }
