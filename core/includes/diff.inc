@@ -56,8 +56,11 @@ abstract class DiffOp {
   }
 }
 
-class _DiffOp_Copy extends _DiffOp
-{
+/**
+ * @private
+ * @ingroup DifferenceEngine  
+ */
+class DiffOpCopy extends DiffOp {
   public $type = 'copy';
 
   function _DiffOp_Copy($orig, $final = false)
