@@ -177,6 +177,8 @@
   float: left; /* LTR */
 }
 [dir="rtl"] .ckeditor-toolbar-groups {
+  margin: 0;
+  padding: 0;
   float: right;
 }
 .ckeditor-toolbar-group {
@@ -211,6 +213,8 @@
   float: left; /* LTR */
 }
 [dir="rtl"] .ckeditor-toolbar-group-buttons {
+  padding: 0;
+  margin: 0;
   float: right;
 }
 .ckeditor-groupnames-toggle {
