@@ -98,12 +98,13 @@
 }
 .ckeditor-row-controls {
   float: right; /* LTR */
+  text-align: right; /* LTR */
   font-size: 18px;
   width: 40px;
-  text-align: right;
 }
 [dir="rtl"] .ckeditor-row-controls {
   float: left;
+  text-align: left;
 }
 .ckeditor-row-controls a {
   display: inline-block;
