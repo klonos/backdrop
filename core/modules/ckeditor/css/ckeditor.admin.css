@@ -54,10 +54,6 @@
   line-height: 1.6;
   background: #f8f8f8;
 }
-[dir="rtl"] .ckeditor-button {
-  padding: 0;
-  margin: 0;
-}
 .ckeditor-buttons .ckeditor-button:first-child {
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
