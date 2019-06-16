@@ -5,7 +5,7 @@
  */
 
 /**
- * Returns HTML for the vocabulary overview form as a sortable list of vocabularies.
+ * Returns HTML for the vocabulary overview page.
  *
  * @param $variables
  *   An associative array containing:
@@ -25,22 +25,16 @@ function theme_taxonomy_overview_vocabularies($variables) {
 
       $row = array();
       $row[] = backdrop_render($vocabulary['name']);
-      if (isset($vocabulary['weight'])) {
-        $vocabulary['weight']['#attributes']['class'] = array('vocabulary-weight');
-        $row[] = backdrop_render($vocabulary['weight']);
-      }
+      $row[] = backdrop_render($vocabulary['items']);
       $row[] = backdrop_render($vocabulary['operations']);
-      $rows[] = array('data' => $row, 'class' => array('draggable'));
+      $rows[] = array('data' => $row);
     }
   }
 
   $header = array(t('Vocabulary name'));
-  if (isset($form['actions'])) {
-    $header[] = t('Weight');
-    backdrop_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
-  }
+  $header[] = array('data' => t('Number of terms'), 'class' => array('priority-low'));
   $header[] = t('Operations');
-  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/structure/taxonomy/add'))), 'attributes' => array('id' => 'taxonomy'))) . backdrop_render_children($form);
+  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/structure/taxonomy/add'))), 'attributes' => array('id' => 'taxonomy')));
 }
 
 /**
