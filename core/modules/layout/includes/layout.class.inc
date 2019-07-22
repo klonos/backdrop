@@ -671,6 +671,7 @@ class Layout {
     else {
       $regions = array_keys($old_layout_info['regions']);
     }
+
     foreach ($regions as $old_region_name) {
       if (isset($region_mapping[$old_region_name])) {
         $new_region_name = $region_mapping[$old_region_name];
@@ -681,6 +682,7 @@ class Layout {
       else {
         $new_region_name = FALSE;
       }
+
       if ($new_region_name && !array_key_exists($new_region_name, $new_positions)) {
         $new_positions[$new_region_name] = array();
       }
@@ -696,6 +698,7 @@ class Layout {
         }
       }
     }
+
     if (!empty($orphaned_blocks)) {
       end($new_positions);
       $default_region = isset($new_layout_info['default region']) ? $new_layout_info['default region'] : key($new_positions);
@@ -706,12 +709,12 @@ class Layout {
         $new_positions[$default_region][] = $uuid;
         $reassigned_blocks[] = $this->content[$uuid]->getAdminTitle();
       }
-        backdrop_set_message(t('The <em>@reassigned_block</em> @block been reassigned to "@new_region" region because the old region does not exist in the new template. Edit layout to move to more appropriate region.', array(
-            '@reassigned_block' => implode(', ', $reassigned_blocks),
-            '@block' => format_plural(count($reassigned_blocks), 'block has', 'blocks have'),
-            '@new_region' => $new_layout_info['regions'][$default_region],
-          )
-        ), 'warning');
+
+      $message = t('The following blocks have been reassigned to the %new_region region, because the regions they were placed to previously do not exist in the new layout template:', array('%new_region' => $new_layout_info['regions'][$default_region]));
+      $message .= theme('item_list', $reassigned_blocks);
+      $message .= t('You can move them to more appropriate regions.');
+
+      backdrop_set_message($message, 'warning');
     }
 
     $this->layout_template = $layout_name;
