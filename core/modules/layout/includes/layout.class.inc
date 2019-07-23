@@ -711,7 +711,7 @@ class Layout {
       }
 
       $message = t('The following blocks have been reassigned to the %new_region region, because the regions they were placed to previously do not exist in the new layout template:', array('%new_region' => $new_layout_info['regions'][$default_region]));
-      $message .= theme('item_list', $reassigned_blocks);
+      $message .= theme('item_list', array('items' => $reassigned_blocks));
       $message .= t('You can move them to more appropriate regions.');
 
       backdrop_set_message($message, 'warning');
