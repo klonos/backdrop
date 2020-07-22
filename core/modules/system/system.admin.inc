@@ -1312,28 +1312,6 @@ function system_site_information_settings($form, &$form_state) {
     '#description' => t('The maximum number of posts displayed on overview pages such as the home page.'),
     '#access' => (config_get('system.core', 'site_frontpage') == 'node'),
   );
-  $form['error_page'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Error pages'),
-  );
-  $form['error_page']['site_403'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Default 403 (access denied) page'),
-    '#default_value' => ($site_config->get('site_403') != '' ? backdrop_get_path_alias($site_config->get('site_403')) : ''),
-    '#size' => 40,
-    '#description' => t('This page is displayed when the requested document is denied to the current user. Leave blank to display a generic "access denied" page.'),
-    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (config_get('system.core', 'clean_url') ? '' : '?q='),
-    '#autocomplete_path' => 'path-autocomplete',
-  );
-  $form['error_page']['site_404'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Default 404 (not found) page'),
-    '#default_value' => ($site_config->get('site_404') != '' ? backdrop_get_path_alias($site_config->get('site_404')) : ''),
-    '#size' => 40,
-    '#description' => t('This page is displayed when no other content matches the requested document. Leave blank to display a generic "page not found" page.'),
-    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (config_get('system.core', 'clean_url') ? '' : '?q='),
-    '#autocomplete_path' => 'path-autocomplete',
-  );
 
   $form['#validate'][] = 'system_site_information_settings_validate';
   $form['#submit'][] = 'system_site_information_settings_submit';
@@ -1610,11 +1588,17 @@ function system_run_cron_submit($form, &$form_state) {
  * @see system_logging_settings_validate()
  */
 function system_logging_settings($form, &$form_state) {
+  $site_config = config('system.core');
   $form['#config'] = 'system.core';
-  $form['error_level'] = array(
+
+  $form['error_display'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Errors displayed'),
+  );
+  $form['error_display']['error_level'] = array(
     '#type' => 'radios',
     '#title' => t('Error messages to display'),
-    '#default_value' => config_get('system.core', 'error_level'),
+    '#default_value' => $site_config->get('error_level'),
     '#options' => array(
       ERROR_REPORTING_HIDE => t('None'),
       ERROR_REPORTING_DISPLAY_SOME => t('Errors and warnings'),
@@ -1622,7 +1606,12 @@ function system_logging_settings($form, &$form_state) {
     ),
     '#description' => t('It is recommended that sites running on production environments do not display any errors.'),
   );
-  $form['watchdog_enabled_severity_levels'] = array(
+
+  $form['error_logging'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Error logging'),
+  );
+  $form['error_logging']['watchdog_enabled_severity_levels'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Severity of messages to log'),
     '#options' => array(
@@ -1636,8 +1625,32 @@ function system_logging_settings($form, &$form_state) {
       WATCHDOG_DEBUG => t('Debug'),
       WATCHDOG_DEPRECATED => t('Deprecated'),
     ),
-    '#default_value' => config_get('system.core', 'watchdog_enabled_severity_levels'),
+    '#default_value' => $site_config->get('watchdog_enabled_severity_levels'),
     '#description' => t('The <em>debug</em> and <em>deprecated</em> severity levels are recommended for developer environments, but not on production sites.'),
+  );
+
+
+  $form['error_page'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Error pages'),
+  );
+  $form['error_page']['site_403'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default 403 (access denied) page'),
+    '#default_value' => ($site_config->get('site_403') != '' ? backdrop_get_path_alias($site_config->get('site_403')) : ''),
+    '#size' => 40,
+    '#description' => t('This page is displayed when the requested document is denied to the current user. Leave blank to display a generic "access denied" page.'),
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (config_get('system.core', 'clean_url') ? '' : '?q='),
+    '#autocomplete_path' => 'path-autocomplete',
+  );
+  $form['error_page']['site_404'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default 404 (not found) page'),
+    '#default_value' => ($site_config->get('site_404') != '' ? backdrop_get_path_alias($site_config->get('site_404')) : ''),
+    '#size' => 40,
+    '#description' => t('This page is displayed when no other content matches the requested document. Leave blank to display a generic "page not found" page.'),
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (config_get('system.core', 'clean_url') ? '' : '?q='),
+    '#autocomplete_path' => 'path-autocomplete',
   );
 
   return system_settings_form($form);
