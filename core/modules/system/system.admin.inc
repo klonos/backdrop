@@ -1700,14 +1700,14 @@ function system_logging_settings($form, &$form_state) {
     '#size' => 40,
     '#field_prefix' => $field_prefix,
     '#states' => array(
-      // Hide when using the generic 403 page provided by core.
+      // Hide when using the generic 404 page provided by core.
       'invisible' => array(
         'input[name="site_404"]' => array('checked' => FALSE),
       ),
     ),
   );
   // We add this as a separate help field instead of a description attached to
-  // the "site_403_path" form element, so that it can be shown bellow the
+  // the "site_404_path" form element, so that it can be shown bellow the
   // checkbox when unticked, and below the path autocomplete when the checkbox
   // is ticked.
   $form['error_pages']['site_404_help'] = array(
