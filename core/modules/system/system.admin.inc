@@ -1740,19 +1740,19 @@ function system_logging_settings_validate($form, &$form_state) {
   // If using a custom 403 page, then validate site_403_path.
   if ($form_state['values']['site_403']) {
     if (empty($form_state['values']['site_403_path'])) {
-      form_set_error('site_403_path', t("Custom 403 page not specified."));
+      form_set_error('site_403_path', t('Custom 403 page not specified.'));
     }
     elseif (!backdrop_valid_path($form_state['values']['site_403_path'])) {
-      form_set_error('site_403_path', t("The path '%path' specified for the custom 403 page is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_403_path'])));
+      form_set_error('site_403_path', t('The path %path specified for the custom 403 page is either invalid or you do not have access to it.', array('%path' => $form_state['values']['site_403_path'])));
     }
   }
   // If using a custom 404 page, then validate site_404_path.
   if ($form_state['values']['site_404']) {
     if (empty($form_state['values']['site_404_path'])) {
-      form_set_error('site_404_path', t("Custom 404 page not specified."));
+      form_set_error('site_404_path', t('Custom 404 page not specified.'));
     }
     elseif (!backdrop_valid_path($form_state['values']['site_404_path'])) {
-      form_set_error('site_404_path', t("The path '%path' specified for the custom 404 page is either invalid or you do not have access to it.", array('%path' => $form_state['values']['site_404_path'])));
+      form_set_error('site_404_path', t('The path %path specified for the custom 404 page is either invalid or you do not have access to it.', array('%path' => $form_state['values']['site_404_path'])));
     }
   }
 
