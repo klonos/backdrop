@@ -935,7 +935,7 @@ function system_menu() {
   );
   $items['admin/config/system/site-information'] = array(
     'title' => 'Site information',
-    'description' => 'Change site name, logo, favicon, slogan, and from e-mail address.',
+    'description' => 'Change site name and slogan, from e-mail address, logo, favicon, and default home page.',
     'page callback' => 'backdrop_get_form',
     'page arguments' => array('system_site_information_settings'),
     'access arguments' => array('administer site configuration'),
