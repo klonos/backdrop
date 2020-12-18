@@ -84,7 +84,7 @@ class views_handler_field_bulk_form extends views_handler_field {
   }
 
   /**
-   * Form constructor for the bulk form.
+   * Form constructor for the bulk operations form.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
@@ -94,10 +94,9 @@ class views_handler_field_bulk_form extends views_handler_field {
   function views_form(&$form, &$form_state) {
     // Add the tableselect javascript.
     $form['#attached']['js'][] = 'core/misc/tableselect.js';
+    $form['#attached']['js'][] = backdrop_get_path('module', 'views') . '/js/views_bulk_actions.js';
 
     // Render checkboxes for all rows.
-    $no_items_selected = array();
-    $at_least_one_item_selected = array();
     $form[$this->options['id']]['#tree'] = TRUE;
     foreach ($this->view->result as $row_index => $row) {
       $form[$this->options['id']][$row_index] = array(
@@ -110,10 +109,6 @@ class views_handler_field_bulk_form extends views_handler_field {
         '#default_value' => !empty($form_state['values'][$this->options['id']][$row_index]) ? 1 : NULL,
         '#attributes' => array('data-tableselect-id' => $this->options['id'])
       );
-      // Compile the various #states arrays for the messages and the "Apply"
-      // button.
-      $no_items_selected[':input[name="bulk_form[' . $row_index . ']"]'] = array('checked' => FALSE);
-      $at_least_one_item_selected[][':input[name="bulk_form[' . $row_index . ']"]'] = array('checked' => TRUE);
     }
 
     // Ensure a consistent container for filters/operations in the view header.
@@ -136,54 +131,17 @@ class views_handler_field_bulk_form extends views_handler_field {
       '#required' => TRUE,
     );
 
-    // Compile the #states array for when items have been selected, but no
-    // action has.
-    $items_selected_but_no_action = $at_least_one_item_selected;
-    foreach ($at_least_one_item_selected as $key => $condition) {
-      $items_selected_but_no_action[$key]['select[name="action"]'] = array('value' => '');
-    }
-
-    // #states cannot be applied to stand-alone #markup elements, so we wrap the
-    // messages in container (div) elements, and we show/hide those instead.
-    $form['select_items'] = array(
-      '#type' => 'container',
-      '#states' => array(
-        'visible' => $no_items_selected,
-      ),
-    );
-    $form['select_items']['message'] = array(
-      '#type' => 'markup',
-      '#markup' => t('You need to select at least one item before any action may be applied.'),
-    );
-    $form['select_action'] = array(
-      '#type' => 'container',
-      '#states' => array(
-        'visible' => array(
-          $items_selected_but_no_action,
-        ),
-      ),
-    );
-    $form['select_action']['message'] = array(
-      '#type' => 'markup',
-      '#markup' => t('No action selected.'),
-    );
-
     // Set the form actions container in the header.
     $actions['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Apply to selected items'),
-      '#states' => array(
-        'visible' => $at_least_one_item_selected,
-        'disabled' => array(
-          'select[name="action"]' => array('value' => ''),
-        ),
-      ),
+      '#id' => 'views-bulk-form-apply',
     );
     $form['header'][$this->options['id']]['actions'] = $actions;
   }
 
   /**
-   * Submit handler for the bulk form.
+   * Submit handler for the bulk operations form.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
