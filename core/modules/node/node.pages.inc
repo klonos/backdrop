@@ -252,18 +252,25 @@ function node_form($form, &$form_state, Node $node) {
       ),
     ),
   );
-  // If the revision log message is set to be required, add the required
-  // indicator to it (red asterisk). This only handles the cosmetic/visual
-  // aspect, as #states cannot not actually handle and enforce the "required"
-  // property. The actual validation needs to happen manually in
-  // node_validate().
-  // This is actually useful in this situation, because if we added the required
-  // indicator via the '#required' property, the form validation would prevent
-  // submission if the user selected to not create a revision.
+
+  // If the revision log message is set to be required for this content type,
+  // add the required indicator (red asterisk) to the "Revision log message".
   if ($node_type->settings['revision_required']) {
+    // This only handles the cosmetic/visual aspect, as #states cannot not
+    // actually handle and enforce the "required" property. The actual
+    // validation needs to happen manually in node_validate().
+    // This is actually useful in this situation, because if we added the
+    // required indicator via the '#required' property, the form validation
+    // would prevent submission if the user selected to not create a revision.
     $form['revision_information']['log']['#states']['required'] = array(
       'input[name="revision"]' => array('checked' => TRUE),
     );
+    // If the user does not have the "Administer content" permission, the
+    // "Create new revision" checkbox won't appear, so we cannot use #states. In
+    // that case, we set the required indicator via the '#required' property.
+    if (!user_access('administer nodes')) {
+      $form['revision_information']['log']['#required'] = TRUE;
+    }
   }
 
   // Node author information for administrators
