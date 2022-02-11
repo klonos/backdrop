@@ -240,23 +240,26 @@ function node_form($form, &$form_state, Node $node) {
     '#default_value' => $node->revision,
     '#access' => user_access('administer nodes'),
   );
-  // Check the revision log checkbox when the log textarea is filled in.
-  // This must not happen if "Create new revision" is enabled by default, since
-  // the state would auto-disable the checkbox otherwise.
-  if (!$node->revision) {
-    $form['revision_information']['revision']['#states'] = array(
-      'checked' => array(
-        'textarea[name="log"]' => array('empty' => FALSE),
-      ),
-    );
-  }
   $form['revision_information']['log'] = array(
     '#type' => 'textarea',
     '#title' => t('Revision log message'),
     '#rows' => 4,
     '#default_value' => !empty($node->log) ? $node->log : '',
     '#description' => t('Briefly describe the changes you have made.'),
+    '#states' => array(
+      'visible' => array(
+        'input[name="revision"]' => array('checked' => TRUE),
+      ),
+    ),
   );
+  // If the revision log message is set to be required, add the required
+  // indicator to it (red asterisk). This only handles the cosmetic/visual
+  // aspect, as #states cannot not actually handle and enforce the "required"
+  // property. The actual validation needs to happen manually in
+  // node_validate().
+  // This is actually useful in this situation, because if we added the required
+  // indicator via the '#required' property, the form validation would prevent
+  // submission if the user selected to not create a revision.
   if ($node_type->settings['revision_required']) {
     $form['revision_information']['log']['#states']['required'] = array(
       'input[name="revision"]' => array('checked' => TRUE),
