@@ -261,13 +261,16 @@ function node_form($form, &$form_state, Node $node) {
     // validation needs to happen manually in node_validate().
     // This is actually useful in this situation, because if we added the
     // required indicator via the '#required' property, the form validation
-    // would prevent submission if the user selected to not create a revision.
+    // would prevent submission if the user selected to not create a revision
+    // (the required field would be visually hidden if the checkbox was
+    // unticked, but it would still be present on the form).
     $form['revision_information']['log']['#states']['required'] = array(
       'input[name="revision"]' => array('checked' => TRUE),
     );
     // If the user does not have the "Administer content" permission, the
-    // "Create new revision" checkbox won't appear, so we cannot use #states. In
-    // that case, we set the required indicator via the '#required' property.
+    // "Create new revision" checkbox won't be present on the form, so we cannot
+    // use #states to show/hide the required indicator. In that case, we set the
+    // required indicator via the '#required' property.
     if (!user_access('administer nodes')) {
       $form['revision_information']['log']['#required'] = TRUE;
     }
