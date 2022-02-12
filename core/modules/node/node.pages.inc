@@ -252,6 +252,11 @@ function node_form($form, &$form_state, Node $node) {
       ),
     ),
   );
+  if ($node_type->settings['revision_required']) {
+    $form['revision_information']['log']['#states']['required'] = array(
+      'input[name="revision"]' => array('checked' => TRUE),
+    );
+  }
 
   // If the revision log message is set to be required for this content type,
   // add the required indicator (red asterisk) to the "Revision log message".
