@@ -2887,7 +2887,6 @@ function form_select_options($element, $choices = NULL) {
     else {
       $key = (string) $key;
       $option_attributes = array();
-      $option_attributes['value'] = $key;
       if ($value_valid && (!$value_is_array && (string) $element['#value'] === $key || ($value_is_array && in_array($key, $element['#value'])))) {
         $option_attributes['selected'] = 'selected';
       }
@@ -2897,7 +2896,13 @@ function form_select_options($element, $choices = NULL) {
         $option_attributes['data-indentation-depth'] = $element[$key]['#indentation'];
       }
 
-      $options .= '<option' . backdrop_attributes($option_attributes) . '>' . check_plain($choice) . '</option>';
+      // The $key variable is being special-cased here and added directly to a
+      // hard-coded "value" attribute, instead of being added to the array with
+      // the rest of the attributes that are being passed to
+      // backdrop_attributes(), as that would cause it to be check_plain()'ed
+      // twice. See https://github.com/backdrop/backdrop-issues/issues/6126.
+      // @todo: Revisit this and fix things properly.
+      $options .= '<option value="' . check_plain($key) . '"' . backdrop_attributes($option_attributes) . '>' . check_plain($choice) . '</option>';
     }
   }
   return $options;
